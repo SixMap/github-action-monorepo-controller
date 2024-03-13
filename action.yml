@@ -33,10 +33,17 @@ runs:
       run: |
         CHANGES=()
         NO_CHANGES=()
-        
-        APPS=($(ls ${{ inputs.dir }}))
+        CONFIRMED_APPS=()
+                
+        APPS=($(ls ./apps))
         for i in "${APPS[@]}"
         do
+            if [[ -f $i ]]; then
+              continue
+            fi
+        
+            CONFIRMED_APPS+=(${i})
+        
             NUMBER=$(( $RANDOM % 100 ))
             if [[ $NUMBER -ge 50 ]]; then
                 CHANGES+=(${i})
@@ -44,15 +51,15 @@ runs:
                 NO_CHANGES+=(${i})
             fi
         done
-
-        APPS_RESULT="$(echo ${APPS[@]} | jq --compact-output --raw-input 'split(" ")')"
+        
+        APPS_RESULT="$(echo ${CONFIRMED_APPS[@]} | jq --compact-output --raw-input 'split(" ")')"
         CHANGES_RESULT="$(echo ${CHANGES[@]} | jq --compact-output --raw-input 'split(" ")')"
         NO_CHANGES_RESULT="$(echo ${NO_CHANGES[@]} | jq --compact-output --raw-input 'split(" ")')"
-        
+                
         echo "apps=${APPS_RESULT//\"/\\\"}"        
         echo "changes=${CHANGES_RESULT//\"/\\\"}"
         echo "no-changes=${NO_CHANGES_RESULT//\"/\\\"}"
-        
+                
         echo "apps=${APPS_RESULT}" >> $GITHUB_OUTPUT        
         echo "changes=${CHANGES_RESULT}" >> $GITHUB_OUTPUT
         echo "no-changes=${NO_CHANGES_RESULT}" >> $GITHUB_OUTPUT
