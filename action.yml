@@ -1,9 +1,9 @@
-name: 'Monorepo random controller'
-description: 'Detect applications that have changes and not'
+name: "Monorepo random controller"
+description: "Detect applications that have changes and not"
 author: hello@cloudposse.com
 branding:
-  icon: 'sliders'
-  color: 'white'
+  icon: "sliders"
+  color: "white"
 inputs:
   dir:
     description: "Applications dir"
@@ -21,11 +21,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: 'Install jq 1.6'
+    - name: "Install jq 1.6"
       uses: dcarbone/install-jq-action@v1.0.1
       with:
         version: 1.6
-        force: 'true'
+        force: "true"
 
     - name: Analize code
       id: controller
@@ -38,12 +38,12 @@ runs:
         APPS=($(ls ./apps))
         for i in "${APPS[@]}"
         do
-            if [[ -f $i ]]; then
+            if [ -f $i ] || [ $i == "external" ] || [ $i == "internal" ]; then
               continue
             fi
-        
+
             CONFIRMED_APPS+=(${i})
-        
+
             NUMBER=$(( $RANDOM % 100 ))
             if [[ $NUMBER -ge 50 ]]; then
                 CHANGES+=(${i})
@@ -51,7 +51,7 @@ runs:
                 NO_CHANGES+=(${i})
             fi
         done
-        
+
         APPS_RESULT="$(echo ${CONFIRMED_APPS[@]} | jq --compact-output --raw-input 'split(" ")')"
         CHANGES_RESULT="$(echo ${CHANGES[@]} | jq --compact-output --raw-input 'split(" ")')"
         NO_CHANGES_RESULT="$(echo ${NO_CHANGES[@]} | jq --compact-output --raw-input 'split(" ")')"
