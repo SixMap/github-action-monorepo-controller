@@ -38,7 +38,7 @@ runs:
         APPS=($(ls ./apps))
         for i in "${APPS[@]}"
         do
-            if [ -f $i ] || [ $i == "external" ] || [ $i == "internal" ]; then
+            if [ -f $i ] || [ $i == "internal" ]; then
               continue
             fi
 
