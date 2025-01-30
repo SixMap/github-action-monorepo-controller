@@ -36,14 +36,16 @@ runs:
 
         APPS=($(ls ./apps))
 
-        
+        # we have to fetch the origin main in order to compare
+        git fetch origin main
+
         for i in "${APPS[@]}"
         do
             if [ -f $i ] ; then
                 continue
             fi
         
-            if [[ "$(git diff --shortstat apps/${i})" ]]; then
+            if [[ "$(git diff origin/main --shortstat apps/${i})" ]]; then
               CHANGES+=(${i})
             else
               NO_CHANGES+=(${i})
