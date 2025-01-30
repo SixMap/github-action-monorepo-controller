@@ -43,14 +43,10 @@ runs:
                 continue
             fi
         
-            COUNTS="$(git status --porcelain --untracked-files=no apps/${i} | wc -l)"
-        
-            CONFIRMED_APPS+=(${i})
-        
-            if [[ $COUNTS -gt 0 ]]; then
-                CHANGES+=(${i})
+            if [[ "$(git diff --shortstat apps/${i})" ]]; then
+              CHANGES+=(${i})
             else
-                NO_CHANGES+=(${i})
+              NO_CHANGES+=(${i})
             fi
         done
 
