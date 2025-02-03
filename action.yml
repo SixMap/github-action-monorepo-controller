@@ -48,8 +48,8 @@ runs:
             if [[ "$(git diff origin/main --shortstat apps/${i})" ]]; then
               CHANGES+=(${i})
             else
-              CHANGES+=(${i})
-              # NO_CHANGES+=(${i})
+              # CHANGES+=(${i})
+              NO_CHANGES+=(${i})
             fi
         done
 
