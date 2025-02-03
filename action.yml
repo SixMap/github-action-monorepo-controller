@@ -49,7 +49,7 @@ runs:
               CHANGES+=(${i})
             else
               CHANGES+=(${i})
-              NO_CHANGES+=(${i})
+              # NO_CHANGES+=(${i})
             fi
         done
 
