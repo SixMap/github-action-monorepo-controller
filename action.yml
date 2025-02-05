@@ -39,19 +39,25 @@ runs:
         # we have to fetch the origin main in order to compare
         git fetch origin main
 
-        for i in "${APPS[@]}"
-        do
-            if [ -f $i ] ; then
-                continue
-            fi
-        
-            if [[ "$(git diff origin/main --shortstat apps/${i})" ]]; then
-              CHANGES+=(${i})
-            else
-              # CHANGES+=(${i})
-              NO_CHANGES+=(${i})
-            fi
-        done
+        if [[ "$(git branch --show-current)" != 'main' ]]; then
+
+            for i in "${APPS[@]}"
+            do
+                if [ -f $i ] ; then
+                    continue
+                fi
+
+                if [[ "$(git diff origin/main --shortstat apps/${i})" ]]; then
+                    CHANGES+=(${i})
+                else
+                    # CHANGES+=(${i})
+                    NO_CHANGES+=(${i})
+                fi
+            done
+
+        else
+            CHANGES="$(echo ${APPS[@]})"
+        fi
 
         APPS_RESULT="$(echo ${APPS[@]} | jq --compact-output --raw-input 'split(" ")')"
         CHANGES_RESULT="$(echo ${CHANGES[@]} | jq --compact-output --raw-input 'split(" ")')"
